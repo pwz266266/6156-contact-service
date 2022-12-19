@@ -1,6 +1,8 @@
 import pymysql
 
 import os
+import boto3
+sns = boto3.client('sns')
 
 
 class ContactResource:
@@ -51,6 +53,11 @@ class ContactResource:
     @staticmethod
     def insert_email_by_id(id, email):
         sql = "INSERT INTO Contacts.Email VALUES (%s, %s)";
+        # Publish a simple message to the specified SNS topic
+        response = sns.publish(
+            TopicArn='arn:aws:sns:us-east-1:771761148579:6156-ShoppingCart-Email',   
+            Message=email,   
+        )
         return ContactResource._execute_sql(sql, [id, email])
 
 
